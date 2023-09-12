@@ -1,0 +1,113 @@
+/* Genel sayfa stilini ayarla */
+body {
+    background-color: black;
+
+}
+/* Menü Stilleri */
+.menu {
+    background-color: rgb(209, 205, 205);
+    text-align: center;
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    display: inline;
+    margin-right: 20px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: rgb(42, 38, 38);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+
+.container {
+    width: 80%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+}
+
+/* Başlık yazı stilini ayarla */
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Form stilini ayarla */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Inputları stilini ayarla */
+input, select {
+    font-size: 15px;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Submit düğmesini stilini ayarla */
+button {
+    font-size: 18px;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Kullanıcı listesi stilini ayarla */
+.user-list {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    
+
+}
+
+.user-list input[type="checkbox"] {
+    width: 20px; /* İstenilen genişliği ayarlayın */
+    height: 20px; /* İstenilen yüksekliği ayarlayın */
+    margin-right: 5px;
+}
+
+/* Kullanıcı etiketleri stilini ayarla */
+label {
+    font-size: 16px;
+    color: #333; /* Gri renk */
+    margin-bottom: 5px;
+}
+
+/* Seçenekleri stilini ayarla */
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+
+/* Mesaj stilini ayarla */
+.hata-mesaji {
+    font-size: 16px;
+    color: red;
+    margin-top: 10px;
+}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kullanıcı Kayıt Formu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="menu">
+        <ul>
+            <li><a href="/">Ana Sayfa</a></li>
+            <!-- Diğer menü öğelerini buraya ekleyebilirsiniz -->
+        </ul>
+    </div>
+<div class="main-container">
+    <div class="tablo-kullanicilar">
+        <h1>Sporcu Listesi</h1>
+        <button class="detay-button"><a href="/sailing_antrenman_ekle">Sailing Antrenman Ekle</a></button>
+        <button class="detay-button"><a href="/fitness_antrenman_ekle">Fitness Antrenman Ekle</a></button>
+        <button class="edit-button" style="float: right;"><a href="/add_sporcu">Sporcu Ekle</a></button>
+
+
+        <table class="kullanici-tablosu">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>ID</th>
+                    <th>İsim</th>
+                    <th>Soyadi</th>
+                    <th>Yaş</th>
+                    <th>Boy</th>
+                    <th>Action</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for kullanici in veriler %}
+                <tr>
+                    
+                    <td style="width: 50px;">
+                        {% if kullanici.user_photo %}
+                            <img src="{{ url_for('static', filename='uploads/' + kullanici.user_photo) }}" alt="Kullanıcı Fotoğrafı" style="width: 50px; height: 50px;">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='uploads/single.svg') }}" alt="Kullanıcı Fotoğrafı Yok" style="width: 50px; height: 50px;">
+                        {% endif %}
+                    </td>
+    
+                    <td style="width: 20px;">{{ kullanici.id }}</td>
+                    <td>{{ kullanici.isim }}</td>
+                    <td>{{ kullanici.soyisim }}</td>
+                    <td style="width: 100px;">{{ kullanici.yas }}</td>
+                    <td style="width: 100px;">{{ kullanici.boy }}</td>
+                    <td style="width: 200px;">
+                        <button class="detay-button"><a href="{{ url_for('single_user', user_id=kullanici.id) }}">Detaylar</a></button>
+                        <button class="edit-button"><a href="{{ url_for('edit_user', user_id=kullanici.id) }}">Edit</a></button>
+                        <button class="delete-user-button" data-user-id="{{ kullanici.id }}">Delete</button>
+                    </td>
+                   
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteButtons = document.querySelectorAll('.delete-user-button');
+
+            deleteButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const userId = this.getAttribute('data-user-id');
+
+                    // Silme işleminden önce onay isteği gönder
+                    if (confirm('Kullanıcıyı silmek istediğinize emin misiniz?')) {
+                        // Kullanıcıyı silme isteğini sunucuya gönder
+                        fetch(`/delete_user/${userId}`, {
+                            method: 'GET',
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message === 'Kullanıcı başarıyla silindi.') {
+                                // Kullanıcı başarıyla silindiğinde satırı kaldır
+                                this.closest('tr').remove();
+                            } else {
+                                alert('Kullanıcı silinirken bir hata oluştu.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Hata:', error);
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+<script>
+    // Dosya seçildiğinde
+document.getElementById("photo").addEventListener("change", function () {
+    var fileInput = this;
+    var selectedPhotoInfo = document.getElementById("selected-photo-info");
+    var selectedPhotoName = document.getElementById("selected-photo-name");
+    var selectedPhoto = document.getElementById("selected-photo");
+
+    if (fileInput.files.length > 0) {
+        var selectedFile = fileInput.files[0];
+        selectedPhotoName.textContent = selectedFile.name;
+
+        // Seçilen fotoğrafın önizlemesini göster
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            selectedPhoto.src = e.target.result;
+        };
+        reader.readAsDataURL(selectedFile);
+
+        // Bilgi divini görünür yap
+        selectedPhotoInfo.style.display = "block";
+    } else {
+        // Hiç dosya seçilmediyse bilgi divini gizle
+        selectedPhotoInfo.style.display = "none";
+    }
+});
+
+</script>
+
+</body>
+</html>

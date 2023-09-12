@@ -1,0 +1,12 @@
+{
+  "name": "veriler_python",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.py",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node main.py"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sporcu Bilgileri</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='single_user.css') }}">
+</head>
+<body>
+    <div class="single-user">
+        <button style="margin-top: 20px; background-color: rgb(33, 152, 102); float: right;"><a class="back-link" href="/" style="text-decoration: none; border: none; color: white;" >Geri Dön</a></button>
+
+        <h1>Sporcu Bilgileri</h1>
+        <button style="margin-bottom: 10px; background-color: brown; text-decoration: none; border: none;"><a href="/edit_user/{{ user.id }}" style="color: white; text-decoration: none;">Düzenle</a></button>
+
+        <div class="user-header">
+            <div class="user-photo">
+                {% if user.user_photo %}
+                    <img src="{{ url_for('static', filename='uploads/' + user.user_photo) }}" alt="Kullanıcı Fotoğrafı">
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/single.svg') }}" alt="Kullanıcı Fotoğrafı Yok">
+                {% endif %}
+            </div>
+            <div class="user-info">
+                <table>
+                    <tr>
+                        <th>ID:</th>
+                        <td>{{ user.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>İsim:</th>
+                        <td>{{ user.isim }}</td>
+                    </tr>
+                    <tr>
+                        <th>Soyad:</th>
+                        <td>{{ user.soyisim }}</td>
+                    </tr>
+                    <tr>
+                        <th>Yaş:</th>
+                        <td>{{ user.yas }}</td>
+                    </tr>
+                    <tr>
+                        <th>Boy:</th>
+                        <td>{{ user.boy }}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+        </div>
+
+        <div class="yariscilik_gecmisi" style="margin-top: 30px; background-color: rgb(213, 213, 213); padding: 10px;">
+            <h1 style="color: rgb(114, 114, 114); font-family: sans-serif; font-size: 15px;">YARISCILIK GECMISI</h1>
+        </div>
+
+        <div class="yariscilik_gecmisi" style="margin-top: 30px; background-color: rgb(213, 213, 213); padding: 10px;">
+            <h1 style="color: rgb(114, 114, 114); font-family: sans-serif; font-size: 15px;">ANTRENMAN GECMISI</h1>
+            <div class="user-resume-container">
+                <div class="user-resume">
+                    <h1>Sailing</h1>
+                    <ul id="fitness-training-list">
+                        {% set total_sailing_count = user.years['2025'].trainings.sailing|length %}
+                        <div class="total-sailing-count">
+                            <h1 style="color: gray;">Total: {{ total_sailing_count }}</h1>
+                            <button onclick="toggleSailingList()" style="margin-left: 30px;" >Incele</button>
+                        </div>
+                        {% for sailing in user.years['2025'].trainings.sailing %}
+                            <li class="sailing-item" style="display: none; ">
+                                Tarih: {{ sailing.tarih }}, Süre: {{ sailing.sure }}
+                                <button class="delete-button" onclick="deleteSailing(this, '{{ user.id }}', '{{ sailing.tarih }}', '{{ sailing.sure }}')">Sil</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="user-resume">
+                    <h1>Fitness</h1>
+                    <ul id="fitness-training-list">
+                        {% set total_fitness_count = user.years['2025'].trainings.fitness|length %}
+                        <div class="total-fitness-count">
+                            <h1 style="color: gray;">Total: {{ total_fitness_count }}</h1>
+                            <button onclick="toggleFitnessList()" style="margin-left: 30px;">Incele</button>
+                        </div>
+                        {% for fitness in user.years['2025'].trainings.fitness %}
+                            <li class="fitness-item" style="display: none;">
+                                Tarih: {{ fitness.tarih }}, Süre: {{ fitness.sure }}
+                                <button class="delete-button" onclick="deleteFitness(this, '{{ user.id }}', '{{ fitness.tarih }}', '{{ fitness.sure }}')">Sil</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="user-resume" style="background-color: antiquewhite; padding:0px 10px 0px 10px;">
+                    <p>Onemli bilgiler</p>
+                    
+                </div>
+            </div>
+
+        
+
+     
+            
+       
+    </div>
+
+         <!-- FITNESS KODLARI-->
+        <script>
+            function toggleFitnessList() {
+                var trainingList = document.querySelectorAll('.fitness-item');
+                var toggleButton = document.querySelector('.total-fitness-count button');
+                
+                trainingList.forEach(function(item) {
+                    if (item.style.display === 'none') {
+                        item.style.display = 'block';
+                        toggleButton.innerText = 'Kapat'; // "See" düğmesini "Close" olarak değiştir
+
+                    } else {
+                        item.style.display = 'none';
+                        toggleButton.innerText = 'Incele'; // "Close" düğmesini "See" olarak değiştir
+                        toggleButton.style.backgroundColor = '';
+
+                    }
+                });
+            }
+
+            function deleteFitness(button, userId, tarih, sure) {
+            var listItem = button.parentElement;
+
+            var confirmDelete = confirm("Bu veriyi silmek istediğinize emin misiniz?");
+            
+            if (confirmDelete) {
+                listItem.remove();
+
+                // Silme işlemi için AJAX isteği gönderin
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/sil_training', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Veri başarıyla silindi.');
+                
+                // Veri başarıyla silindiğinde, total_training_count değerini güncelleyin
+                var trainingList = document.querySelectorAll('.fitness-item');
+                var totalTrainingCount = 0;
+                trainingList.forEach(function (item) {
+                    if (item.style.display !== 'none') {
+                        totalTrainingCount++;
+                    }
+                });
+                document.querySelector('.total-fitness-count h1').innerText = 'Total: ' + totalTrainingCount;
+            } else {
+                console.error('Veri silinirken bir hata oluştu.');
+            }
+        };
+        xhr.send('user_id=' + userId + '&tarih=' + tarih + '&sure=' + sure);
+    }
+}
+        </script>
+
+    <!-- SAILING KODLARI-->
+        <script>
+
+            function toggleSailingList() {
+                var trainingList = document.querySelectorAll('.sailing-item');
+                var toggleButton = document.querySelector('.total-sailing-count button');
+                
+                trainingList.forEach(function(item) {
+                    if (item.style.display === 'none') {
+                        item.style.display = 'block';
+                        toggleButton.innerText = 'Kapat'; // "See" düğmesini "Close" olarak değiştir
+                    } else {
+                        item.style.display = 'none';
+                        toggleButton.innerText = 'Incele'; // "Close" düğmesini "See" olarak değiştir
+                    }
+                });
+            }         
+
+            function deleteSailing(button, userId, tarih, sure) {
+            var listItem = button.parentElement;
+
+            var confirmDelete = confirm("Bu veriyi silmek istediğinize emin misiniz?");
+            
+            if (confirmDelete) {
+                listItem.remove();
+
+                // Silme işlemi için AJAX isteği gönderin
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/sil_sailing', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Veri başarıyla silindi.');
+                
+                // Veri başarıyla silindiğinde, total_training_count değerini güncelleyin
+                var trainingList = document.querySelectorAll('.sailing-item');
+                var totalTrainingCount = 0;
+                trainingList.forEach(function (item) {
+                    if (item.style.display !== 'none') {
+                        totalTrainingCount++;
+                    }
+                });
+                document.querySelector('.total-sailing-count h1').innerText = 'Total: ' + totalTrainingCount;
+            } else {
+                console.error('Veri silinirken bir hata oluştu.');
+            }
+        };
+        xhr.send('user_id=' + userId + '&tarih=' + tarih + '&sure=' + sure);
+    }
+}
+
+        </script>
+    </div>
+</body>
+</html>

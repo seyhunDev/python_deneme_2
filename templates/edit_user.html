@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kullanıcı Düzenleme Formu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='edit_user.css') }}">
+</head>
+<body>
+<div class="container">
+    <form method="POST" enctype="multipart/form-data"> <!-- enctype ekledik -->
+        <button class="edit-button"><a href="/">Ana Sayfa</a></button>
+
+        <h1>Düzenleme Formu</h1>
+
+        <label for="isim">İsim:</label>
+        <input style="max-width: 95%; float: left;" type="text" id="isim" name="isim" value="{{ user.isim }}" required><br>
+
+        <label for="soyisim">Soyisim:</label>
+        <input style="max-width: 95%; float: left;" type="text" id="soyisim" name="soyisim" value="{{ user.soyisim }}" required><br>
+
+        <label for="yas">Yaş:</label>
+        <input style="max-width: 10%; float: left;" type="number" id="yas" name="yas" value="{{ user.yas }}" required><br>
+
+        <div style="margin-top: 30px; float: right;">
+            {% if user.user_photo %}
+                <img src="{{ url_for('static', filename='uploads/' + user.user_photo) }}" alt="Kullanıcı Fotoğrafı" style="width: 100px; ">
+            {% else %}
+                <img src="{{ url_for('static', filename='uploads/single.svg') }}" alt="Kullanıcı Fotoğrafı Yok" style="width: 100px;">
+            {% endif %}
+        </div>
+
+        <input type="file" id="photo" name="photo" style="float: left;"> <!-- Fotoğraf yükleme alanı -->
+        <img src="{{ url_for('static', filename=user.photo) }}" alt="Kullanıcı Fotoğrafı" style="display: none;" > <!-- Mevcut fotoğrafı göster -->
+
+
+
+        <button type="submit" style=" margin-top: 20px; float: left;">Tamam</button>
+
+    </form>
+</div>
+
+</body>
+</html>

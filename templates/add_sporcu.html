@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kullanıcı Kayıt Formu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='add_sporcu.css') }}">
+</head>
+<body>
+<div class="menu">
+
+</div>
+<div class="menu">
+    <ul>
+        <li><a href="/">Ana Sayfa</a></li>
+        <!-- Diğer menü öğelerini buraya ekleyebilirsiniz -->
+    </ul>
+</div>
+<div class="container">
+    <div class="kayit-form">
+        <h1>Sporcu Kayıt Formu</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="isim">İsim:</label>
+                <input type="text" id="isim" name="isim" required>
+            </div>
+        
+            <div class="input-group">
+                <label for="soyisim">Soyisim:</label>
+                <input type="text" id="soyisim" name="soyisim" required>
+            </div>
+            <div class="input-group">
+                <label for="telefon">Telefon:</label>
+                <input type="text" id="soyisim" name="soyisim" required>
+            </div>
+        
+            <div class="input-group" >
+                <label for="yas">Yaş:</label>
+                <input style="max-width: 70px; padding: 5px;  " type="number" id="yas" name="yas" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="boy">Boy:</label>
+                <input style="max-width: 70px; padding: 5px; " type="number" id="boy" name="boy" required>
+            </div>
+
+            <label for="photo" class="custom-file-upload">
+    <input type="file" id="photo" name="photo" accept="image/*" required>
+    <span style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: 12px;">Foto Seç</span>
+</label>
+
+            
+            <button type="submit" style="background-color: aqua; float: right; height: 80px; width: 80px; border: none;">Kaydet</button>
+
+            <div id="selected-photo-info" style="display: none; ">
+                <img id="selected-photo" src="#" alt="Seçilen Fotoğraf" style="width: 68px; margin-top: 3px; ">
+                <p style="display: none;">Seçilen:<span id="selected-photo-name"></span></p>
+                
+            </div>
+        </form>
+
+        <div class="hata-mesaji" style="margin-top: 5px; color: rgb(3, 109, 109);">{{ mesaj }}</div>
+    </div>
+</div>
+
+<script>
+    // Dosya seçildiğinde
+document.getElementById("photo").addEventListener("change", function () {
+    var fileInput = this;
+    var selectedPhotoInfo = document.getElementById("selected-photo-info");
+    var selectedPhotoName = document.getElementById("selected-photo-name");
+    var selectedPhoto = document.getElementById("selected-photo");
+
+    if (fileInput.files.length > 0) {
+        var selectedFile = fileInput.files[0];
+        selectedPhotoName.textContent = selectedFile.name;
+
+        // Seçilen fotoğrafın önizlemesini göster
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            selectedPhoto.src = e.target.result;
+        };
+        reader.readAsDataURL(selectedFile);
+
+        // Bilgi divini görünür yap
+        selectedPhotoInfo.style.display = "block";
+    } else {
+        // Hiç dosya seçilmediyse bilgi divini gizle
+        selectedPhotoInfo.style.display = "none";
+    }
+});
+
+</script>
+
+</body>
+</html>

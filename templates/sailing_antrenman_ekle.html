@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Antrenman Ekle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='fitness_antrenman_ekle.css') }}">
+</head>
+<body>
+
+    <div class="menu">
+        <ul>
+            <li><a href="/">Ana Sayfa</a></li>
+            <!-- Diğer menü öğelerini buraya ekleyebilirsiniz -->
+        </ul>
+    </div>
+    <div class="container">
+        <h1>Antrenman Ekle</h1>
+        <form method="POST" action="/sailing_antrenman_ekle">
+            <div class="form-group">
+                <label for="user_id">Kullanıcı Seç:</label>
+                <div class="user-list">
+                    {% for kullanici in kullaniciVerileri %}
+                    <label>
+                        <input type="checkbox" name="user_id[]" value="{{ kullanici.id }}">
+                        {{ kullanici.isim }} {{ kullanici.soyisim }}
+                    </label><br>
+                    {% endfor %}
+                </div>
+                
+
+            </div>
+
+            <div class="form-group">
+                <label for="tarih">Tarih:</label>
+                <input type="date" name="tarih" id="tarih">
+            </div>
+
+            <div class="form-group">
+                <label for="sure">Süre:</label>
+                <input type="text" name="sure" id="sure">
+                <button class="button" type="submit" value="Antrenman Ekle">Antrenman Ekle</button>
+            </div>   
+        </form>
+
+        <div class="hata-mesaji">{{ mesaj }}</div>
+
+    </div>
+
+      <!-- JavaScript kodu -->
+      <script>
+        function submitForm() {
+            // Kullanıcı veri girdi mi kontrol et
+            var tarih = document.getElementById('tarih').value;
+            var sure = document.getElementById('sure').value;
+            var userSelect = document.getElementById('user_id');
+            var selectedUsers = userSelect.selectedOptions;
+
+            if (tarih === "" || sure === "" || selectedUsers.length === 0) {
+                // Kullanıcı veri girmedi, formu gönderme
+                alert("Lütfen tüm alanları doldurun.");
+                return false;
+            }
+
+            // Kullanıcı veri girdi, formu gönder
+            return true;
+        }
+    </script>
+
+<script>
+    // Bugünün tarihini al
+    var today = new Date();
+    
+    // YYYY-MM-DD formatında bir tarih dizisi oluştur
+    var formattedDate = today.toISOString().substr(0, 10);
+    
+    // input alanına bugünün tarihini yerleştir
+    document.getElementById("tarih").value = formattedDate;
+</script>
+</body>
+</html>
